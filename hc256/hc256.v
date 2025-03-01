@@ -95,7 +95,7 @@ fn (mut h Hc256) step_a(mut u[] u32, v u32, mut a[] u32, b u32, c u32, d u32, mu
     u[0] += b + (temp0 ^ temp1) + h.q[temp2]
     a[0] = u[0]
     h.h1(d, mut &temp3)
-    m[0] ^= temp3 ^ u[0]
+    m ^= temp3 ^ u[0]
 }
 
 @[inline]
@@ -211,4 +211,3 @@ pub fn (mut h Hc256) encrypt(mut data [16]u32) {
         h.step_b(mut h.q[cc+15..],h.q[dd+0], mut h.y[15..],h.y[5], h.y[12],h.y[3], mut data[15..]);
     }
 }
-
