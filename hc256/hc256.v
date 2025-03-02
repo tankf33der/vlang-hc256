@@ -47,32 +47,20 @@ fn (mut h Hc256) feedback_2(mut u &u32, v u32, b u32, c u32) {
 }
 
 // Helpers for encrypt()
-
 fn (mut h Hc256) h1(x u32, mut y &u32) {
-    // XXX
-    mut a := u8(0)
-    mut b := u8(0)
-    mut c := u8(0)
-    mut d := u8(0)
-
-    a = u8(x)
-    b = u8(x >>  8)
-    c = u8(x >> 16)
-    d = u8(x >> 24)
+    mut a := u8(x)
+    mut b := u8(x >> 8)
+    mut c := u8(x >> 16)
+    mut d := u8(x >> 24)
     y = h.q[a]+h.q[256+b]+h.q[512+c]+h.q[768+d]
 }
 
 fn (mut h Hc256) h2(x u32, mut y &u32) {
-    // XXX
-    mut a := u8(0)
-    mut b := u8(0)
-    mut c := u8(0)
-    mut d := u8(0)
+    mut a := u8(x)
+    mut b := u8(x >> 8)
+    mut c := u8(x >> 16)
+    mut d := u8(x >> 24)
 
-    a = u8(x)
-    b = u8(x >>  8)
-    c = u8(x >> 16)
-    d = u8(x >> 24)
     y = h.p[a]+h.p[256+b]+h.p[512+c]+h.p[768+d]
 }
 
@@ -82,17 +70,18 @@ fn (mut h Hc256) step_a(mut u &u32, v u32, mut a &u32, b u32, c u32, d u32, mut 
     mut temp2 := u32(0)
     mut temp3 := u32(0)
 
+    println('input: ${u}:${v}:${a}:${b}:${c}:${d}:${m}')
+
     temp0 = bits.rotate_left_32(v, -23)
     temp1 = bits.rotate_left_32(c, -10)
     temp2 = (v ^ c) & 0x3ff
+    println('tempo: ${temp0}:${temp1}:${temp2}')
     u[0] += b + (temp0 ^ temp1) + h.q[temp2]
     a[0] = u[0]
-    println('before h1: ${temp3}')
+    println('before h1: ${u[0]}:${a[0]}:${temp3}')
     h.h1(d, mut &temp3)
-    println('enc step_a ${temp3}')
-    println(m[0])
+    println('after h1: ${temp3}')
     m[0] ^= temp3 ^ u[0]
-    println(m[0])
 }
 
 fn (mut h Hc256) step_b(mut u &u32, v u32, mut a &u32, b u32, c u32, d u32, mut m &u32) {
@@ -145,6 +134,7 @@ pub fn (mut h Hc256) initialization(key [8]u32, iv [8]u32) {
             h.feedback_1(mut &h.p[j],h.p[j+1],h.p[j-10],h.p[j-3])
         }
         h.feedback_1(mut &h.p[1023],h.p[0],h.p[1013],h.p[1020])
+
         for j := 0; j < 10; j++ {
             h.feedback_2(mut &h.q[j],h.q[j+1],h.q[(j-10)&0x3ff],h.q[(j-3)&0x3ff])
         }
@@ -152,6 +142,7 @@ pub fn (mut h Hc256) initialization(key [8]u32, iv [8]u32) {
             h.feedback_2(mut &h.q[j],h.q[j+1],h.q[j-10],h.q[j-3])
         }
         h.feedback_2(mut &h.q[1023],h.q[0],h.q[1013],h.q[1020])
+
     }
 
     h.counter2048 = 0
@@ -167,11 +158,6 @@ pub fn (mut h Hc256) encrypt(mut data [16]u32) {
         h.counter2048 = (h.counter2048 + u32(16)) & 0x7ff;
 
         h.step_a(mut &h.p[cc+0], h.p[cc+1], mut &h.x[0], h.x[6], h.x[13],h.x[4], mut &data[0]);
-
-        println('inside enc')
-        println(h.p[cc])
-        println(h.x[0])
-        println(data[0])
 
 /*
         h.step_a(mut &h.p[cc+1], h.p[cc+2], mut &h.x[1], h.x[7], h.x[14],h.x[5], mut &data[1]);
