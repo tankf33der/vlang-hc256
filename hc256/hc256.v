@@ -12,37 +12,34 @@ pub mut:
 }
 
 // Helpers for initialization()
+@[inline]
 fn f1 (x u32) u32 {
     return bits.rotate_left_32(x, -7) ^ bits.rotate_left_32(x, -18) ^ (x >> 3)
 }
 
+@[inline]
 fn f2 (x u32) u32 {
     return bits.rotate_left_32(x, -17) ^ bits.rotate_left_32(x, -19) ^ (x >> 10)
 }
 
+@[inline]
 fn f (a u32, b u32, c u32, d u32) u32 {
     return f2(a) + b + f1(c) + d
 }
 
+@[inline]
 fn (mut h Hc256) feedback_1(mut u &u32, v u32, b u32, c u32) {
-    mut temp0 := u32(0)
-    mut temp1 := u32(0)
-    mut temp2 := u32(0)
-
-    temp0 = bits.rotate_left_32(v, -23)
-    temp1 = bits.rotate_left_32(c, -10)
-    temp2 = (v ^ c) & 0x3ff
+    mut temp0 := bits.rotate_left_32(v, -23)
+    mut temp1 := bits.rotate_left_32(c, -10)
+    mut temp2 := (v ^ c) & 0x3ff
     u[0] += b + (temp0 ^ temp1) + h.q[temp2]
 }
 
+@[inline]
 fn (mut h Hc256) feedback_2(mut u &u32, v u32, b u32, c u32) {
-    mut temp0 := u32(0)
-    mut temp1 := u32(0)
-    mut temp2 := u32(0)
-
-    temp0 = bits.rotate_left_32(v, -23)
-    temp1 = bits.rotate_left_32(c, -10)
-    temp2 = (v ^ c) & 0x3ff
+    mut temp0 := bits.rotate_left_32(v, -23)
+    mut temp1 := bits.rotate_left_32(c, -10)
+    mut temp2 := (v ^ c) & 0x3ff
     u[0] += b + (temp0 ^ temp1) + h.p[temp2]
 }
 
@@ -53,6 +50,7 @@ fn (mut h Hc256) h1(x u32, mut y &u32) {
     mut b := u8(x >> 8)
     mut c := u8(x >> 16)
     mut d := u8(x >> 24)
+
     y = h.q[a]+h.q[b+int(256)]+h.q[c+int(512)]+h.q[d+int(768)]
 }
 
@@ -62,19 +60,17 @@ fn (mut h Hc256) h2(x u32, mut y &u32) {
     mut b := u8(x >> 8)
     mut c := u8(x >> 16)
     mut d := u8(x >> 24)
+
     y = h.p[a]+h.p[b+int(256)]+h.p[c+int(512)]+h.p[d+int(768)]
 }
 
 @[inline]
 fn (mut h Hc256) step_a(mut u &u32, v u32, mut a &u32, b u32, c u32, d u32, mut m &u32) {
-    mut temp0 := u32(0)             // XXX
-    mut temp1 := u32(0)
-    mut temp2 := u32(0)
+    mut temp0 := bits.rotate_left_32(v, -23)
+    mut temp1 := bits.rotate_left_32(c, -10)
+    mut temp2 := (v ^ c) & 0x3ff
     mut temp3 := u32(0)
 
-    temp0 = bits.rotate_left_32(v, -23)
-    temp1 = bits.rotate_left_32(c, -10)
-    temp2 = (v ^ c) & 0x3ff
     u[0] += b + (temp0 ^ temp1) + h.q[temp2]
     a[0] = u[0]
     h.h1(d, mut &temp3)
@@ -96,7 +92,6 @@ fn (mut h Hc256) step_b(mut u &u32, v u32, mut a &u32, b u32, c u32, d u32, mut 
     h.h1(d, mut &temp3)
     m[0] ^= temp3 ^ u[0]
 }
-
 
 pub fn (mut h Hc256) initialization(key [8]u32, iv [8]u32) {
     for i := 0; i < 8;  i++ { h.p[i] = key[i] }
@@ -141,7 +136,6 @@ pub fn (mut h Hc256) initialization(key [8]u32, iv [8]u32) {
             h.feedback_2(mut &h.q[j],h.q[j+1],h.q[j-10],h.q[j-3])
         }
         h.feedback_2(mut &h.q[1023],h.q[0],h.q[1013],h.q[1020])
-
     }
 
     h.counter2048 = 0
