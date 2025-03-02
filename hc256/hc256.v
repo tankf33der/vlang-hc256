@@ -96,7 +96,6 @@ fn (mut h Hc256) step_a(mut u[] u32, v u32, mut a[] u32, b u32, c u32, d u32, mu
     a[0] = u[0]
     h.h1(d, mut &temp3)
     m[0] ^= temp3 ^ u[0]
-    m[0] = 12345
 }
 
 @[inline]
@@ -115,7 +114,8 @@ fn (mut h Hc256) step_b(mut u[] u32, v u32, mut a[] u32, b u32, c u32, d u32, mu
     m[0] ^= temp3 ^ u[0]
 }
 
-pub fn (mut h Hc256) initialization(key [8]u32, iv [8]u32) {
+
+pub fn (mut h Hc256) initialization(key []u32, iv []u32) {
     for i := 0; i < 8;  i++ { h.p[i] = key[i] }
     for i := 8; i < 16; i++ { h.p[i] =  iv[i-8] }
 
@@ -169,14 +169,13 @@ pub fn (mut h Hc256) initialization(key [8]u32, iv [8]u32) {
     for i := 0; i < 16; i++ { h.y[i] = h.q[1008+i] }
 }
 
-pub fn (mut h Hc256) encrypt(mut data [16]u32) {
+pub fn (mut h Hc256) encrypt(mut data []u32) {
     cc := h.counter2048 & 0x3ff
     dd := (cc + 16) & 0x3ff
 
     if h.counter2048 < 1024 {
         h.counter2048 = (h.counter2048 + u32(16)) & 0x7ff;
         h.step_a(mut h.p[cc+0..], h.p[cc+1], mut h.x[0..], h.x[6], h.x[13],h.x[4], mut data[0..]);
-/*
         h.step_a(mut h.p[cc+1..], h.p[cc+2], mut h.x[1..], h.x[7], h.x[14],h.x[5], mut data[1..]);
         h.step_a(mut h.p[cc+2..], h.p[cc+3], mut h.x[2..], h.x[8], h.x[15],h.x[6], mut data[2..]);
         h.step_a(mut h.p[cc+3..], h.p[cc+4], mut h.x[3..], h.x[9], h.x[0], h.x[7], mut data[3..]);
@@ -192,13 +191,10 @@ pub fn (mut h Hc256) encrypt(mut data [16]u32) {
         h.step_a(mut h.p[cc+13..],h.p[cc+14],mut h.x[13..],h.x[3], h.x[10],h.x[1], mut data[13..]);
         h.step_a(mut h.p[cc+14..],h.p[cc+15],mut h.x[14..],h.x[4], h.x[11],h.x[2], mut data[14..]);
         h.step_a(mut h.p[cc+15..],h.p[dd+0], mut h.x[15..],h.x[5], h.x[12],h.x[3], mut data[15..]);
-*/
     }
     else {
         h.counter2048 = (h.counter2048 + u32(16)) & 0x7ff;
-
         h.step_b(mut h.q[cc+0..], h.q[cc+1], mut h.y[0..], h.y[6], h.y[13],h.y[4], mut data[0..]);
-/*
         h.step_b(mut h.q[cc+1..], h.q[cc+2], mut h.y[1..], h.y[7], h.y[14],h.y[5], mut data[1..]);
         h.step_b(mut h.q[cc+2..], h.q[cc+3], mut h.y[2..], h.y[8], h.y[15],h.y[6], mut data[2..]);
         h.step_b(mut h.q[cc+3..], h.q[cc+4], mut h.y[3..], h.y[9], h.y[0], h.y[7], mut data[3..]);
@@ -214,6 +210,5 @@ pub fn (mut h Hc256) encrypt(mut data [16]u32) {
         h.step_b(mut h.q[cc+13..],h.q[cc+14],mut h.y[13..],h.y[3], h.y[10],h.y[1], mut data[13..]);
         h.step_b(mut h.q[cc+14..],h.q[cc+15],mut h.y[14..],h.y[4], h.y[11],h.y[2], mut data[14..]);
         h.step_b(mut h.q[cc+15..],h.q[dd+0], mut h.y[15..],h.y[5], h.y[12],h.y[3], mut data[15..]);
-*/
     }
 }
