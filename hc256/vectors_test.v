@@ -11,4 +11,6 @@ fn test_vectors () {
 
     assert data[0] == 2240350043
     assert data[15] == 2171174450
+    h.free()
+
 }
