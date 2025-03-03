@@ -6,7 +6,7 @@ fn test_vectors () {
     mut data := [16]u32{}
 
     mut h := hc256.Hc256{}
-    h.initialization(key, iv)
+    h.seed(key, iv)
     h.encrypt(mut data)
 
     assert data[0] == 2240350043
