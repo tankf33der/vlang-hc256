@@ -1,8 +1,10 @@
-Vlang implementation of hc256 RNG.
+Vlang implementation of HC-256 RNG.
 
-PracRand says:
+PracRand says (copy-paste):
 ```
-HC256 is the highest quality recommended RNG and the most cryptographically secure. Its biggest drawback is slow seeding time.  It's also a little slow and a bit large, but not so much of either of those as to hinder usability for typical purposes.
+HC256 is the highest quality recommended RNG and the most cryptographically secure.
+Its biggest drawback is slow seeding time. It's also a little slow and a bit large,
+but not so much of either of those as to hinder usability for typical purposes.
 
 	actual name: HC-256 (not sure what that stands for)
 	This algorithm is included because it is believed to be quite
