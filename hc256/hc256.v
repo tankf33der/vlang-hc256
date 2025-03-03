@@ -185,3 +185,8 @@ pub fn (mut h Hc256) encrypt(mut data [16]u32) {
         h.step_b(mut &h.q[cc+15],h.q[dd+0], mut &h.y[15],h.y[5], h.y[12],h.y[3], mut &data[15]);
     }
 }
+
+@[unsafe]
+pub fn (mut h Hc256) free() {
+    unsafe { free(h) }
+}
