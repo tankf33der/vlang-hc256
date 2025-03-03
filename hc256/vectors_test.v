@@ -32,5 +32,4 @@ fn test_vectors () {
     h.encrypt(mut data)
     assert data[0] == 4266278940
     h.free()
-
 }
