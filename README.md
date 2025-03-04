@@ -1,4 +1,4 @@
-Vlang implementation of HC-256 RNG.
+Vlang implementation of HC-256 crypto RNG.
 
 PracRand says (copy-paste):
 ```
