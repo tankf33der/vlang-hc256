@@ -40,7 +40,7 @@ but not so much of either of those as to hinder usability for typical purposes.
 		reversible:       yes?
 ```
 
-Example of usage:
+My example of usage:
 ```v
 import hc256
 import os
