@@ -3,7 +3,7 @@ module hc256
 import math.bits
 
 pub struct Hc256 {
-pub mut:
+mut:
     p               [1024]u32
     q               [1024]u32
     x               [16]u32
@@ -195,7 +195,11 @@ pub fn (mut h Hc256) u32() u32 {
         h.shuffle()
         h.used = 0
     }
-    return h.state[h.used++]
+    defer {
+        h.used++
+    }
+
+    return h.state[h.used]
 }
 
 @[unsafe]
