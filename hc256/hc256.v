@@ -3,7 +3,7 @@ module hc256
 import math.bits
 
 pub struct Hc256 {
-mut:
+pub mut:
     p               [1024]u32
     q               [1024]u32
     x               [16]u32
@@ -191,7 +191,7 @@ fn (mut h Hc256) shuffle() {
 }
 
 pub fn (mut h Hc256) u32() u32 {
-    if h.used >= 16 {
+    if h.used == 16 {
         h.shuffle()
         h.used = 0
     }
