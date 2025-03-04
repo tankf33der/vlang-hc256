@@ -1,7 +1,7 @@
 import hc256
 
 fn test_vectors () {
-    mut key := [8]u32{}
+    mut key := []u32{}
     mut iv := [8]u32{}
     mut data := [16]u32{}
     mut rng32 := u32(0)

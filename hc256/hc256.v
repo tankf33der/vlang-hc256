@@ -88,7 +88,7 @@ fn (mut h Hc256) step_b(mut u &u32, v u32, mut a &u32, b u32, c u32, d u32, mut 
     m[0] ^= temp3 ^ u[0]
 }
 
-pub fn (mut h Hc256) seed(key [8]u32, iv [8]u32) {
+pub fn (mut h Hc256) seed(key []u32, iv []u32) {
     for i := 0; i < 8;  i++ { h.p[i] = key[i] }
     for i := 8; i < 16; i++ { h.p[i] =  iv[i-8] }
     for i := u32(16); i < 528; i++ {
