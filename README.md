@@ -39,3 +39,25 @@ but not so much of either of those as to hinder usability for typical purposes.
 		multi-cyclic:     yes
 		reversible:       yes?
 ```
+
+Example of usage:
+```v
+import hc256
+import os
+
+fn main() {
+    mut rng := hc256.Hc256{}
+    mut key := []u32{}
+    mut iv  := []u32{}
+    mut f   := os.open("/dev/urandom")!
+    for _ in 0..8 {
+        key << f.read_le[u32]()!
+        iv  << f.read_le[u32]()!
+    }
+    rng.seed(key, iv)
+    for _ in 0..5 {
+        println(rng.u32())
+    }
+    f.close()
+}
+```
