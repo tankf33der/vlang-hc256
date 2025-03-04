@@ -52,7 +52,6 @@ fn (mut h Hc256) h1(x u32, mut y &u32) {
     mut b := int(u8(x >> 8))
     mut c := int(u8(x >> 16))
     mut d := int(u8(x >> 24))
-
     y = h.q[a]+h.q[256+b]+h.q[512+c]+h.q[768+d]
 }
 
@@ -62,7 +61,6 @@ fn (mut h Hc256) h2(x u32, mut y &u32) {
     mut b := int(u8(x >> 8))
     mut c := int(u8(x >> 16))
     mut d := int(u8(x >> 24))
-
     y = h.p[a]+h.p[256+b]+h.p[512+c]+h.p[768+d]
 }
 
@@ -72,7 +70,6 @@ fn (mut h Hc256) step_a(mut u &u32, v u32, mut a &u32, b u32, c u32, d u32, mut 
     mut temp1 := bits.rotate_left_32(c, -10)
     mut temp2 := (v ^ c) & 0x3ff
     mut temp3 := u32(0)
-
     u[0] += b + (temp0 ^ temp1) + h.q[temp2]
     a[0] = u[0]
     h.h1(d, mut &temp3)
@@ -85,7 +82,6 @@ fn (mut h Hc256) step_b(mut u &u32, v u32, mut a &u32, b u32, c u32, d u32, mut 
     mut temp1 := bits.rotate_left_32(c, -10)
     mut temp2 := (v ^ c) & 0x3ff
     mut temp3 := u32(0)
-
     u[0] += b + (temp0 ^ temp1) + h.p[temp2]
     a[0] = u[0]
     h.h1(d, mut &temp3)
@@ -95,7 +91,6 @@ fn (mut h Hc256) step_b(mut u &u32, v u32, mut a &u32, b u32, c u32, d u32, mut 
 pub fn (mut h Hc256) seed(key [8]u32, iv [8]u32) {
     for i := 0; i < 8;  i++ { h.p[i] = key[i] }
     for i := 8; i < 16; i++ { h.p[i] =  iv[i-8] }
-
     for i := u32(16); i < 528; i++ {
         h.p[i] = f(h.p[i-2],h.p[i-7],h.p[i-15],h.p[i-16])+i
     }
@@ -117,7 +112,6 @@ pub fn (mut h Hc256) seed(key [8]u32, iv [8]u32) {
     for i := u32(16); i < 1024; i++ {
         h.q[i] = f(h.q[i-2],h.q[i-7],h.q[i-15],h.q[i-16])+1536+i
     }
-
     //run the cipher 4096 steps without generating output
     for i := 0; i < 2; i++ {
         for j := 0; j < 10; j++ {
@@ -136,21 +130,17 @@ pub fn (mut h Hc256) seed(key [8]u32, iv [8]u32) {
         }
         h.feedback_2(mut &h.q[1023],h.q[0],h.q[1013],h.q[1020])
     }
-
     h.counter2048 = 0
     for i := 0; i < 16; i++ { h.x[i] = h.p[1008+i] }
     for i := 0; i < 16; i++ { h.y[i] = h.q[1008+i] }
-
     h.shuffle()
 }
 
 fn (mut h Hc256) shuffle() {
     cc := h.counter2048 & 0x3ff
     dd := (cc + 16) & 0x3ff
-
     if h.counter2048 < 1024 {
         h.counter2048 = (h.counter2048 + u32(16)) & 0x7ff;
-
         h.step_a(mut &h.p[cc+0], h.p[cc+1], mut &h.x[0], h.x[6], h.x[13],h.x[4], mut &h.state[0]);
         h.step_a(mut &h.p[cc+1], h.p[cc+2], mut &h.x[1], h.x[7], h.x[14],h.x[5], mut &h.state[1]);
         h.step_a(mut &h.p[cc+2], h.p[cc+3], mut &h.x[2], h.x[8], h.x[15],h.x[6], mut &h.state[2]);
@@ -170,7 +160,6 @@ fn (mut h Hc256) shuffle() {
     }
     else {
         h.counter2048 = (h.counter2048 + u32(16)) & 0x7ff;
-
         h.step_b(mut &h.q[cc+0], h.q[cc+1], mut &h.y[0], h.y[6], h.y[13],h.y[4], mut &h.state[0]);
         h.step_b(mut &h.q[cc+1], h.q[cc+2], mut &h.y[1], h.y[7], h.y[14],h.y[5], mut &h.state[1]);
         h.step_b(mut &h.q[cc+2], h.q[cc+3], mut &h.y[2], h.y[8], h.y[15],h.y[6], mut &h.state[2]);
@@ -198,7 +187,6 @@ pub fn (mut h Hc256) u32() u32 {
     defer {
         h.used++
     }
-
     return h.state[h.used]
 }
 
