@@ -42,8 +42,8 @@ but not so much of either of those as to hinder usability for typical purposes.
 
 My example of usage:
 ```v
-import hc256
 import os
+import tankf33der.hc256
 
 fn main() {
     mut rng := hc256.Hc256{}
