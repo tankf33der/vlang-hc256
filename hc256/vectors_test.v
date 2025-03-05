@@ -8,23 +8,23 @@ fn test_vectors () {
 
     mut h := hc256.Hc256{}
     h.seed(key, iv)
-    assert h.u32() == 2240350043
+    assert h.u32()! == 2240350043
     for i in 0..14 {
-        h.u32()
+        h.u32()!
     }
-    assert h.u32() == 2171174450
+    assert h.u32()! == 2171174450
     h.free()
 
     h = hc256.Hc256{}
     iv[0] = 1
     h.seed(key, iv)
-    assert h.u32() == 3215123119
+    assert h.u32()! == 3215123119
     h.free()
 
     h = hc256.Hc256{}
     iv[0] = 0
     key[0] = 0x55
     h.seed(key, iv)
-    assert h.u32() == 4266278940
+    assert h.u32()! == 4266278940
     h.free()
 }
