@@ -14,22 +14,22 @@ mut:
 }
 
 // Helpers for initialization()
-@[inline]
+@[inline; direct_array_access]
 fn f1 (x u32) u32 {
     return bits.rotate_left_32(x, -7) ^ bits.rotate_left_32(x, -18) ^ (x >> 3)
 }
 
-@[inline]
+@[inline; direct_array_access]
 fn f2 (x u32) u32 {
     return bits.rotate_left_32(x, -17) ^ bits.rotate_left_32(x, -19) ^ (x >> 10)
 }
 
-@[inline]
+@[inline; direct_array_access]
 fn f (a u32, b u32, c u32, d u32) u32 {
     return f2(a) + b + f1(c) + d
 }
 
-@[inline]
+@[inline; direct_array_access]
 fn (mut h Hc256) feedback_1(mut u &u32, v u32, b u32, c u32) {
     mut temp0 := bits.rotate_left_32(v, -23)
     mut temp1 := bits.rotate_left_32(c, -10)
@@ -37,7 +37,7 @@ fn (mut h Hc256) feedback_1(mut u &u32, v u32, b u32, c u32) {
     u[0] += b + (temp0 ^ temp1) + h.q[temp2]
 }
 
-@[inline]
+@[inline; direct_array_access]
 fn (mut h Hc256) feedback_2(mut u &u32, v u32, b u32, c u32) {
     mut temp0 := bits.rotate_left_32(v, -23)
     mut temp1 := bits.rotate_left_32(c, -10)
@@ -46,7 +46,7 @@ fn (mut h Hc256) feedback_2(mut u &u32, v u32, b u32, c u32) {
 }
 
 // Helpers for encrypt()
-@[inline]
+@[inline; direct_array_access]
 fn (mut h Hc256) h1(x u32, mut y &u32) {
     mut a := int(u8(x))
     mut b := int(u8(x >> 8))
@@ -55,7 +55,7 @@ fn (mut h Hc256) h1(x u32, mut y &u32) {
     y = h.q[a]+h.q[256+b]+h.q[512+c]+h.q[768+d]
 }
 
-@[inline]
+@[inline; direct_array_access]
 fn (mut h Hc256) h2(x u32, mut y &u32) {
     mut a := int(u8(x))
     mut b := int(u8(x >> 8))
@@ -64,7 +64,7 @@ fn (mut h Hc256) h2(x u32, mut y &u32) {
     y = h.p[a]+h.p[256+b]+h.p[512+c]+h.p[768+d]
 }
 
-@[inline]
+@[inline; direct_array_access]
 fn (mut h Hc256) step_a(mut u &u32, v u32, mut a &u32, b u32, c u32, d u32, mut m &u32) {
     mut temp0 := bits.rotate_left_32(v, -23)
     mut temp1 := bits.rotate_left_32(c, -10)
@@ -76,7 +76,7 @@ fn (mut h Hc256) step_a(mut u &u32, v u32, mut a &u32, b u32, c u32, d u32, mut 
     m[0] ^= temp3 ^ u[0]
 }
 
-@[inline]
+@[inline; direct_array_access]
 fn (mut h Hc256) step_b(mut u &u32, v u32, mut a &u32, b u32, c u32, d u32, mut m &u32) {
     mut temp0 := bits.rotate_left_32(v, -23)
     mut temp1 := bits.rotate_left_32(c, -10)
