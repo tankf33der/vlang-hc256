@@ -56,7 +56,7 @@ fn main() {
     }
     rng.seed(key, iv)
     for _ in 0..5 {
-        println(rng.u32())
+        println(rng.u32()!)
     }
     rng.free()
     f.close()
