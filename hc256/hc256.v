@@ -3,12 +3,12 @@ module hc256
 import math.bits
 
 pub struct Hc256 {
-mut:
+pub mut:
     p               [1024]u32
     q               [1024]u32
     x               [16]u32
     y               [16]u32
-    used            int
+    used            int = -1
     state           [16]u32
     counter2048     u32
 }
@@ -133,6 +133,7 @@ pub fn (mut h Hc256) seed(key []u32, iv []u32) {
     h.counter2048 = 0
     for i := 0; i < 16; i++ { h.x[i] = h.p[1008+i] }
     for i := 0; i < 16; i++ { h.y[i] = h.q[1008+i] }
+    h.used = 0;
     h.shuffle()
 }
 
