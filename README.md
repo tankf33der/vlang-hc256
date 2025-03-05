@@ -58,6 +58,7 @@ fn main() {
     for _ in 0..5 {
         println(rng.u32())
     }
+    rng.free()
     f.close()
 }
 ```
