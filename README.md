@@ -46,19 +46,38 @@ import os
 import tankf33der.hc256
 
 fn main() {
-    mut rng := hc256.Hc256{}
-    mut key := []u32{}
-    mut iv  := []u32{}
-    mut f   := os.open("/dev/urandom")!
-    for _ in 0..8 {
-        key << f.read_le[u32]()!
-        iv  << f.read_le[u32]()!
-    }
-    rng.seed(key, iv)
-    for _ in 0..5 {
-        println(rng.u32()!)
-    }
-    unsafe { rng.free() }
-    f.close()
+        mut rng := hc256.Hc256{}
+    	mut key := []u32{}
+    	mut iv  := []u32{}
+    	mut f   := os.open("/dev/urandom")!
+    	for _ in 0..8 {
+        	key << f.read_le[u32]()!
+        	iv  << f.read_le[u32]()!
+    	}
+    	rng.seed(key, iv)
+    	for _ in 0..5 {
+        	println(rng.u32()!)
+    	}
+    	unsafe { rng.free() }
+    	f.close()
 }
+```
+
+Public API:
+```
+module hc256
+
+struct Hc256 {
+mut:
+        p           [1024]u32
+        q           [1024]u32
+        x           [16]u32
+        y           [16]u32
+        used        int = -1
+        state       [16]u32
+        counter2048 u32
+}
+fn (mut h Hc256) seed(key []u32, iv []u32)
+fn (mut h Hc256) u32() !u32
+fn (mut h Hc256) free()
 ```
