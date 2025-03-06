@@ -1,4 +1,4 @@
-import hc256
+import tankf33der.hc256
 
 fn test_vectors() {
 	mut key := []u32{len: 8}
