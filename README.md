@@ -64,7 +64,7 @@ fn main() {
 ```
 
 Public API:
-```
+```v
 module hc256
 
 struct Hc256 {
