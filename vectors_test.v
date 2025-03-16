@@ -7,7 +7,7 @@ fn test_vectors() {
 	mut h := hc256.Hc256{}
 	h.seed(key, iv)
 	assert h.u32()! == 2240350043
-	for i in 0 .. 14 {
+	for _ in 0 .. 14 {
 		h.u32()!
 	}
 	assert h.u32()! == 2171174450
