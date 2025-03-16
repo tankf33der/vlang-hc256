@@ -3,8 +3,6 @@ import tankf33der.hc256
 fn test_vectors() {
 	mut key := []u32{len: 8}
 	mut iv := []u32{len: 8}
-	mut data := [16]u32{}
-	mut rng32 := u32(0)
 
 	mut h := hc256.Hc256{}
 	h.seed(key, iv)
