@@ -84,7 +84,7 @@ fn (mut h Hc256) step_b(mut u &u32, v u32, mut a &u32, b u32, c u32, d u32, mut 
 	mut temp3 := u32(0)
 	u[0] += b + (temp0 ^ temp1) + h.p[temp2]
 	a[0] = u[0]
-	h.h1(d, mut &temp3)
+	h.h2(d, mut &temp3)
 	m[0] ^= temp3 ^ u[0]
 }
 

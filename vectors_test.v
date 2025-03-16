@@ -11,6 +11,7 @@ fn test_vectors() {
 		h.u32()!
 	}
 	assert h.u32()! == 2171174450
+	assert h.u32()! == 3134664310
 	unsafe { h.free() }
 
 	h = hc256.Hc256{}
@@ -25,4 +26,16 @@ fn test_vectors() {
 	h.seed(key, iv)
 	assert h.u32()! == 4266278940
 	unsafe { h.free() }
+}
+
+fn test_long() {
+	mut key := []u32{len: 8}
+	mut iv := []u32{len: 8}
+
+	mut h := hc256.Hc256{}
+	h.seed(key, iv)
+	for _ in 0..160000 {
+		h.u32()!
+	}
+	assert h.u32()! == 1178169499
 }
