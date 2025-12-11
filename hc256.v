@@ -72,7 +72,7 @@ fn (mut h Hc256) step_a(mut u &u32, v u32, mut a &u32, b u32, c u32, d u32, mut 
 	mut temp3 := u32(0)
 	u[0] += b + (temp0 ^ temp1) + h.q[temp2]
 	a[0] = u[0]
-	h.h1(d, mut &temp3)
+	h.h1(d, mut temp3)
 	m[0] ^= temp3 ^ u[0]
 }
 
@@ -84,7 +84,7 @@ fn (mut h Hc256) step_b(mut u &u32, v u32, mut a &u32, b u32, c u32, d u32, mut 
 	mut temp3 := u32(0)
 	u[0] += b + (temp0 ^ temp1) + h.p[temp2]
 	a[0] = u[0]
-	h.h2(d, mut &temp3)
+	h.h2(d, mut temp3)
 	m[0] ^= temp3 ^ u[0]
 }
 
@@ -119,20 +119,20 @@ pub fn (mut h Hc256) seed(key []u32, iv []u32) {
 	// run the cipher 4096 steps without generating output
 	for i := 0; i < 2; i++ {
 		for j := 0; j < 10; j++ {
-			h.feedback_1(mut &h.p[j], h.p[j + 1], h.p[(j - 10) & 0x3ff], h.p[(j - 3) & 0x3ff])
+			h.feedback_1(mut h.p[j], h.p[j + 1], h.p[(j - 10) & 0x3ff], h.p[(j - 3) & 0x3ff])
 		}
 		for j := 10; j < 1023; j++ {
-			h.feedback_1(mut &h.p[j], h.p[j + 1], h.p[j - 10], h.p[j - 3])
+			h.feedback_1(mut h.p[j], h.p[j + 1], h.p[j - 10], h.p[j - 3])
 		}
 		h.feedback_1(mut &h.p[1023], h.p[0], h.p[1013], h.p[1020])
 
 		for j := 0; j < 10; j++ {
-			h.feedback_2(mut &h.q[j], h.q[j + 1], h.q[(j - 10) & 0x3ff], h.q[(j - 3) & 0x3ff])
+			h.feedback_2(mut h.q[j], h.q[j + 1], h.q[(j - 10) & 0x3ff], h.q[(j - 3) & 0x3ff])
 		}
 		for j := 10; j < 1023; j++ {
-			h.feedback_2(mut &h.q[j], h.q[j + 1], h.q[j - 10], h.q[j - 3])
+			h.feedback_2(mut h.q[j], h.q[j + 1], h.q[j - 10], h.q[j - 3])
 		}
-		h.feedback_2(mut &h.q[1023], h.q[0], h.q[1013], h.q[1020])
+		h.feedback_2(mut h.q[1023], h.q[0], h.q[1013], h.q[1020])
 	}
 	h.counter2048 = 0
 	for i := 0; i < 16; i++ {
@@ -150,72 +150,72 @@ fn (mut h Hc256) shuffle() {
 	dd := (cc + 16) & 0x3ff
 	if h.counter2048 < 1024 {
 		h.counter2048 = (h.counter2048 + u32(16)) & 0x7ff
-		h.step_a(mut &h.p[cc + 0], h.p[cc + 1], mut &h.x[0], h.x[6], h.x[13], h.x[4], mut
-			&h.state[0])
-		h.step_a(mut &h.p[cc + 1], h.p[cc + 2], mut &h.x[1], h.x[7], h.x[14], h.x[5], mut
-			&h.state[1])
-		h.step_a(mut &h.p[cc + 2], h.p[cc + 3], mut &h.x[2], h.x[8], h.x[15], h.x[6], mut
-			&h.state[2])
-		h.step_a(mut &h.p[cc + 3], h.p[cc + 4], mut &h.x[3], h.x[9], h.x[0], h.x[7], mut
-			&h.state[3])
-		h.step_a(mut &h.p[cc + 4], h.p[cc + 5], mut &h.x[4], h.x[10], h.x[1], h.x[8], mut
-			&h.state[4])
-		h.step_a(mut &h.p[cc + 5], h.p[cc + 6], mut &h.x[5], h.x[11], h.x[2], h.x[9], mut
-			&h.state[5])
-		h.step_a(mut &h.p[cc + 6], h.p[cc + 7], mut &h.x[6], h.x[12], h.x[3], h.x[10], mut
-			&h.state[6])
-		h.step_a(mut &h.p[cc + 7], h.p[cc + 8], mut &h.x[7], h.x[13], h.x[4], h.x[11], mut
-			&h.state[7])
-		h.step_a(mut &h.p[cc + 8], h.p[cc + 9], mut &h.x[8], h.x[14], h.x[5], h.x[12], mut
-			&h.state[8])
-		h.step_a(mut &h.p[cc + 9], h.p[cc + 10], mut &h.x[9], h.x[15], h.x[6], h.x[13], mut
-			&h.state[9])
-		h.step_a(mut &h.p[cc + 10], h.p[cc + 11], mut &h.x[10], h.x[0], h.x[7], h.x[14], mut
-			&h.state[10])
-		h.step_a(mut &h.p[cc + 11], h.p[cc + 12], mut &h.x[11], h.x[1], h.x[8], h.x[15], mut
-			&h.state[11])
-		h.step_a(mut &h.p[cc + 12], h.p[cc + 13], mut &h.x[12], h.x[2], h.x[9], h.x[0], mut
-			&h.state[12])
-		h.step_a(mut &h.p[cc + 13], h.p[cc + 14], mut &h.x[13], h.x[3], h.x[10], h.x[1], mut
-			&h.state[13])
-		h.step_a(mut &h.p[cc + 14], h.p[cc + 15], mut &h.x[14], h.x[4], h.x[11], h.x[2], mut
-			&h.state[14])
-		h.step_a(mut &h.p[cc + 15], h.p[dd + 0], mut &h.x[15], h.x[5], h.x[12], h.x[3], mut
-			&h.state[15])
+		h.step_a(mut h.p[cc + 0], h.p[cc + 1], mut h.x[0], h.x[6], h.x[13], h.x[4], mut
+			h.state[0])
+		h.step_a(mut h.p[cc + 1], h.p[cc + 2], mut h.x[1], h.x[7], h.x[14], h.x[5], mut
+			h.state[1])
+		h.step_a(mut h.p[cc + 2], h.p[cc + 3], mut h.x[2], h.x[8], h.x[15], h.x[6], mut
+			h.state[2])
+		h.step_a(mut h.p[cc + 3], h.p[cc + 4], mut h.x[3], h.x[9], h.x[0], h.x[7], mut
+			h.state[3])
+		h.step_a(mut h.p[cc + 4], h.p[cc + 5], mut h.x[4], h.x[10], h.x[1], h.x[8], mut
+			h.state[4])
+		h.step_a(mut h.p[cc + 5], h.p[cc + 6], mut h.x[5], h.x[11], h.x[2], h.x[9], mut
+			h.state[5])
+		h.step_a(mut h.p[cc + 6], h.p[cc + 7], mut h.x[6], h.x[12], h.x[3], h.x[10], mut
+			h.state[6])
+		h.step_a(mut h.p[cc + 7], h.p[cc + 8], mut h.x[7], h.x[13], h.x[4], h.x[11], mut
+			h.state[7])
+		h.step_a(mut h.p[cc + 8], h.p[cc + 9], mut h.x[8], h.x[14], h.x[5], h.x[12], mut
+			h.state[8])
+		h.step_a(mut h.p[cc + 9], h.p[cc + 10], mut h.x[9], h.x[15], h.x[6], h.x[13], mut
+			h.state[9])
+		h.step_a(mut h.p[cc + 10], h.p[cc + 11], mut h.x[10], h.x[0], h.x[7], h.x[14], mut
+			h.state[10])
+		h.step_a(mut h.p[cc + 11], h.p[cc + 12], mut h.x[11], h.x[1], h.x[8], h.x[15], mut
+			h.state[11])
+		h.step_a(mut h.p[cc + 12], h.p[cc + 13], mut h.x[12], h.x[2], h.x[9], h.x[0], mut
+			h.state[12])
+		h.step_a(mut h.p[cc + 13], h.p[cc + 14], mut h.x[13], h.x[3], h.x[10], h.x[1], mut
+			h.state[13])
+		h.step_a(mut h.p[cc + 14], h.p[cc + 15], mut h.x[14], h.x[4], h.x[11], h.x[2], mut
+			h.state[14])
+		h.step_a(mut h.p[cc + 15], h.p[dd + 0], mut h.x[15], h.x[5], h.x[12], h.x[3], mut
+			h.state[15])
 	} else {
 		h.counter2048 = (h.counter2048 + u32(16)) & 0x7ff
-		h.step_b(mut &h.q[cc + 0], h.q[cc + 1], mut &h.y[0], h.y[6], h.y[13], h.y[4], mut
-			&h.state[0])
-		h.step_b(mut &h.q[cc + 1], h.q[cc + 2], mut &h.y[1], h.y[7], h.y[14], h.y[5], mut
-			&h.state[1])
-		h.step_b(mut &h.q[cc + 2], h.q[cc + 3], mut &h.y[2], h.y[8], h.y[15], h.y[6], mut
-			&h.state[2])
-		h.step_b(mut &h.q[cc + 3], h.q[cc + 4], mut &h.y[3], h.y[9], h.y[0], h.y[7], mut
-			&h.state[3])
-		h.step_b(mut &h.q[cc + 4], h.q[cc + 5], mut &h.y[4], h.y[10], h.y[1], h.y[8], mut
-			&h.state[4])
-		h.step_b(mut &h.q[cc + 5], h.q[cc + 6], mut &h.y[5], h.y[11], h.y[2], h.y[9], mut
-			&h.state[5])
-		h.step_b(mut &h.q[cc + 6], h.q[cc + 7], mut &h.y[6], h.y[12], h.y[3], h.y[10], mut
-			&h.state[6])
-		h.step_b(mut &h.q[cc + 7], h.q[cc + 8], mut &h.y[7], h.y[13], h.y[4], h.y[11], mut
-			&h.state[7])
-		h.step_b(mut &h.q[cc + 8], h.q[cc + 9], mut &h.y[8], h.y[14], h.y[5], h.y[12], mut
-			&h.state[8])
-		h.step_b(mut &h.q[cc + 9], h.q[cc + 10], mut &h.y[9], h.y[15], h.y[6], h.y[13], mut
-			&h.state[9])
-		h.step_b(mut &h.q[cc + 10], h.q[cc + 11], mut &h.y[10], h.y[0], h.y[7], h.y[14], mut
-			&h.state[10])
-		h.step_b(mut &h.q[cc + 11], h.q[cc + 12], mut &h.y[11], h.y[1], h.y[8], h.y[15], mut
-			&h.state[11])
-		h.step_b(mut &h.q[cc + 12], h.q[cc + 13], mut &h.y[12], h.y[2], h.y[9], h.y[0], mut
-			&h.state[12])
-		h.step_b(mut &h.q[cc + 13], h.q[cc + 14], mut &h.y[13], h.y[3], h.y[10], h.y[1], mut
-			&h.state[13])
-		h.step_b(mut &h.q[cc + 14], h.q[cc + 15], mut &h.y[14], h.y[4], h.y[11], h.y[2], mut
-			&h.state[14])
-		h.step_b(mut &h.q[cc + 15], h.q[dd + 0], mut &h.y[15], h.y[5], h.y[12], h.y[3], mut
-			&h.state[15])
+		h.step_b(mut h.q[cc + 0], h.q[cc + 1], mut h.y[0], h.y[6], h.y[13], h.y[4], mut
+			h.state[0])
+		h.step_b(mut h.q[cc + 1], h.q[cc + 2], mut h.y[1], h.y[7], h.y[14], h.y[5], mut
+			h.state[1])
+		h.step_b(mut h.q[cc + 2], h.q[cc + 3], mut h.y[2], h.y[8], h.y[15], h.y[6], mut
+			h.state[2])
+		h.step_b(mut h.q[cc + 3], h.q[cc + 4], mut h.y[3], h.y[9], h.y[0], h.y[7], mut
+			h.state[3])
+		h.step_b(mut h.q[cc + 4], h.q[cc + 5], mut h.y[4], h.y[10], h.y[1], h.y[8], mut
+			h.state[4])
+		h.step_b(mut h.q[cc + 5], h.q[cc + 6], mut h.y[5], h.y[11], h.y[2], h.y[9], mut
+			h.state[5])
+		h.step_b(mut h.q[cc + 6], h.q[cc + 7], mut h.y[6], h.y[12], h.y[3], h.y[10], mut
+			h.state[6])
+		h.step_b(mut h.q[cc + 7], h.q[cc + 8], mut h.y[7], h.y[13], h.y[4], h.y[11], mut
+			h.state[7])
+		h.step_b(mut h.q[cc + 8], h.q[cc + 9], mut h.y[8], h.y[14], h.y[5], h.y[12], mut
+			h.state[8])
+		h.step_b(mut h.q[cc + 9], h.q[cc + 10], mut h.y[9], h.y[15], h.y[6], h.y[13], mut
+			h.state[9])
+		h.step_b(mut h.q[cc + 10], h.q[cc + 11], mut h.y[10], h.y[0], h.y[7], h.y[14], mut
+			h.state[10])
+		h.step_b(mut h.q[cc + 11], h.q[cc + 12], mut h.y[11], h.y[1], h.y[8], h.y[15], mut
+			h.state[11])
+		h.step_b(mut h.q[cc + 12], h.q[cc + 13], mut h.y[12], h.y[2], h.y[9], h.y[0], mut
+			h.state[12])
+		h.step_b(mut h.q[cc + 13], h.q[cc + 14], mut h.y[13], h.y[3], h.y[10], h.y[1], mut
+			h.state[13])
+		h.step_b(mut h.q[cc + 14], h.q[cc + 15], mut h.y[14], h.y[4], h.y[11], h.y[2], mut
+			h.state[14])
+		h.step_b(mut h.q[cc + 15], h.q[dd + 0], mut h.y[15], h.y[5], h.y[12], h.y[3], mut
+			h.state[15])
 	}
 }
 
