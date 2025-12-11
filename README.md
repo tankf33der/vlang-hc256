@@ -47,19 +47,17 @@ import tankf33der.hc256
 
 fn main() {
         mut rng := hc256.Hc256{}
-    	mut key := []u32{}
-    	mut iv  := []u32{}
-    	mut f   := os.open("/dev/urandom")!
-    	for _ in 0..8 {
-        	key << f.read_le[u32]()!
-        	iv  << f.read_le[u32]()!
+    	mut key := []u32{len: 8}
+    	mut iv  := []u32{len: 8}
+    	for i in 0 .. 8 {
+        	key[i] = rand.u32()
+        	iv[i] = rand.u32()
     	}
     	rng.seed(key, iv)
-    	for _ in 0..5 {
+    	for _ in 0 .. 5 {
         	println(rng.u32()!)
     	}
     	unsafe { rng.free() }
-    	f.close()
 }
 ```
 
