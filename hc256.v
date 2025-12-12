@@ -31,17 +31,17 @@ fn f(a u32, b u32, c u32, d u32) u32 {
 
 @[direct_array_access; inline]
 fn (mut h Hc256) feedback_1(mut u &u32, v u32, b u32, c u32) {
-	mut temp0 := bits.rotate_left_32(v, -23)
-	mut temp1 := bits.rotate_left_32(c, -10)
-	mut temp2 := (v ^ c) & 0x3ff
+	temp0 := bits.rotate_left_32(v, -23)
+	temp1 := bits.rotate_left_32(c, -10)
+	temp2 := (v ^ c) & 0x3ff
 	u[0] += b + (temp0 ^ temp1) + h.q[temp2]
 }
 
 @[direct_array_access; inline]
 fn (mut h Hc256) feedback_2(mut u &u32, v u32, b u32, c u32) {
-	mut temp0 := bits.rotate_left_32(v, -23)
-	mut temp1 := bits.rotate_left_32(c, -10)
-	mut temp2 := (v ^ c) & 0x3ff
+	temp0 := bits.rotate_left_32(v, -23)
+	temp1 := bits.rotate_left_32(c, -10)
+	temp2 := (v ^ c) & 0x3ff
 	u[0] += b + (temp0 ^ temp1) + h.p[temp2]
 }
 
