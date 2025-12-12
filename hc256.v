@@ -48,27 +48,27 @@ fn (mut h Hc256) feedback_2(mut u &u32, v u32, b u32, c u32) {
 // Helpers for encrypt()
 @[direct_array_access; inline]
 fn (mut h Hc256) h1(x u32, mut y &u32) {
-	mut a := int(u8(x))
-	mut b := int(u8(x >> 8))
-	mut c := int(u8(x >> 16))
-	mut d := int(u8(x >> 24))
+	a := int(u8(x))
+	b := int(u8(x >> 8))
+	c := int(u8(x >> 16))
+	d := int(u8(x >> 24))
 	y = h.q[a] + h.q[256 + b] + h.q[512 + c] + h.q[768 + d]
 }
 
 @[direct_array_access; inline]
 fn (mut h Hc256) h2(x u32, mut y &u32) {
-	mut a := int(u8(x))
-	mut b := int(u8(x >> 8))
-	mut c := int(u8(x >> 16))
-	mut d := int(u8(x >> 24))
+	a := int(u8(x))
+	b := int(u8(x >> 8))
+	c := int(u8(x >> 16))
+	d := int(u8(x >> 24))
 	y = h.p[a] + h.p[256 + b] + h.p[512 + c] + h.p[768 + d]
 }
 
 @[direct_array_access; inline]
 fn (mut h Hc256) step_a(mut u &u32, v u32, mut a &u32, b u32, c u32, d u32, mut m &u32) {
-	mut temp0 := bits.rotate_left_32(v, -23)
-	mut temp1 := bits.rotate_left_32(c, -10)
-	mut temp2 := (v ^ c) & 0x3ff
+	temp0 := bits.rotate_left_32(v, -23)
+	temp1 := bits.rotate_left_32(c, -10)
+	temp2 := (v ^ c) & 0x3ff
 	mut temp3 := u32(0)
 	u[0] += b + (temp0 ^ temp1) + h.q[temp2]
 	a[0] = u[0]
@@ -78,9 +78,9 @@ fn (mut h Hc256) step_a(mut u &u32, v u32, mut a &u32, b u32, c u32, d u32, mut 
 
 @[direct_array_access; inline]
 fn (mut h Hc256) step_b(mut u &u32, v u32, mut a &u32, b u32, c u32, d u32, mut m &u32) {
-	mut temp0 := bits.rotate_left_32(v, -23)
-	mut temp1 := bits.rotate_left_32(c, -10)
-	mut temp2 := (v ^ c) & 0x3ff
+	temp0 := bits.rotate_left_32(v, -23)
+	temp1 := bits.rotate_left_32(c, -10)
+	temp2 := (v ^ c) & 0x3ff
 	mut temp3 := u32(0)
 	u[0] += b + (temp0 ^ temp1) + h.p[temp2]
 	a[0] = u[0]
